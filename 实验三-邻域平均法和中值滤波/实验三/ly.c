@@ -10,31 +10,13 @@ int count[256],acum[256];
 char buf[2048];
 
 
-uchar Median(uchar n1, uchar n2, uchar n3, uchar n4, uchar n5,
+uchar AvgBox(uchar n1, uchar n2, uchar n3, uchar n4, uchar n5,
 	uchar n6, uchar n7, uchar n8, uchar n9) {
-	int i, j, gap;
-	int flag = 0;
+
+	uchar avg;
+	avg = (n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9)/9.0;
 	
-	uchar arr[9],temp;
-	arr[0] = n1;	arr[1] = n2;	arr[2] = n3;
-	arr[3] = n4;	arr[4] = n5;	arr[5] = n6;
-	arr[6] = n7;	arr[7] = n8;	arr[8] = n9;
-	
-	for(i = 0;i < 9;++i){
-		flag=0;
-		for(j = 0;j < 9;++j){
-			if(arr[j]>arr[j+1]){
-				temp = arr[j];
-				arr[j] = arr[j+1];
-				arr[j+1] = temp;
-				flag=1;
-			}
-		}
-		if(flag==0){
-			break;	
-		}
-	}
-	return arr[4];//返回中值
+	return avg;
 }
 
 int main(int argc, char* argv[])//argc是参数个数;argv是具体的每一个参数,可用下标控制
@@ -71,8 +53,7 @@ int main(int argc, char* argv[])//argc是参数个数;argv是具体的每一个�
 			if(	(i - 1) >= 0 && (i + 1) <= hdr->width && 
 				(j - 1) >= 0 && (j + 1) <= hdr->height ){
 				
-				
-				bitmap[k2] = Median(bitmap[k1 - 1], bitmap[k1], bitmap[k1 + 1],
+				bitmap[k2] = AvgBox(bitmap[k1 - 1], bitmap[k1], bitmap[k1 + 1],
 									bitmap[k2 - 1], bitmap[k2], bitmap[k2 + 1],	
 									bitmap[k3 - 1], bitmap[k3], bitmap[k3 + 1]);
 				
