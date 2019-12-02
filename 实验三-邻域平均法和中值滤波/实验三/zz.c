@@ -11,7 +11,7 @@ char buf[2048];
 
 
 uchar Median(uchar n1, uchar n2, uchar n3, uchar n4, uchar n5,
-	uchar n6, uchar n7, uchar n8, uchar n9) {
+	uchar n6, uchar n7, uchar n8, uchar n9) {//返回中值
 	int i, j, gap;
 	int flag = 0;
 	
@@ -63,14 +63,12 @@ int main(int argc, char* argv[])//argc是参数个数;argv是具体的每一个�
 	for(i = 0;i < hdr->height ; ++i){		//高
 		for(j = 0;j < hdr->width ; ++j){		//宽
 			
-			
 			k1 = (i - 1) * hdr->width + j;	//上一行
 			k2 = i * hdr->width + j;		//这一行
 			k3 = (i + 1) * hdr->width + j;	//下一行
 				
 			if(	(i - 1) >= 0 && (i + 1) <= hdr->width && 
 				(j - 1) >= 0 && (j + 1) <= hdr->height ){
-				
 				
 				bitmap[k2] = Median(bitmap[k1 - 1], bitmap[k1], bitmap[k1 + 1],
 									bitmap[k2 - 1], bitmap[k2], bitmap[k2 + 1],	

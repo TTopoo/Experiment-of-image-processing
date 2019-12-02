@@ -11,10 +11,17 @@ char buf[2048];
 
 
 uchar AvgBox(uchar n1, uchar n2, uchar n3, uchar n4, uchar n5,
-	uchar n6, uchar n7, uchar n8, uchar n9) {
+	uchar n6, uchar n7, uchar n8, uchar n9, uchar n10,
+	uchar n11, uchar n12, uchar n13, uchar n14, uchar n15,
+	uchar n16, uchar n17, uchar n18, uchar n19, uchar n20,
+	uchar n21, uchar n22, uchar n23, uchar n24, uchar n25) {//返回均值
 
 	uchar avg;
-	avg = (n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9)/9.0;
+	avg = ( n1 + n2 + n3 + n4 + n5 + 
+			n6 + n7 + n8 + n9 + n10 + 
+			n11 + n12 + n13 + n14 + n15 + 
+			n16 + n17 + n18 + n19 + n20 + 
+			n21 + n22 + n23 + n24 + n25 )/25.0;
 	
 	return avg;
 }
@@ -45,17 +52,21 @@ int main(int argc, char* argv[])//argc是参数个数;argv是具体的每一个�
 	for(i = 0;i < hdr->height ; ++i){		//高
 		for(j = 0;j < hdr->width ; ++j){		//宽
 			
-			
+			k0 = (i - 2) * hdr->width + j;	//上上一行
 			k1 = (i - 1) * hdr->width + j;	//上一行
 			k2 = i * hdr->width + j;		//这一行
 			k3 = (i + 1) * hdr->width + j;	//下一行
+			k4 = (i + 2) * hdr->width + j;	//下下一行
+			
+			if(	(i - 2) >= 0 && (i + 2) <= hdr->width && 
+				(j - 2) >= 0 && (j + 2) <= hdr->height ){
 				
-			if(	(i - 1) >= 0 && (i + 1) <= hdr->width && 
-				(j - 1) >= 0 && (j + 1) <= hdr->height ){
-				
-				bitmap[k2] = AvgBox(bitmap[k1 - 1], bitmap[k1], bitmap[k1 + 1],
-									bitmap[k2 - 1], bitmap[k2], bitmap[k2 + 1],	
-									bitmap[k3 - 1], bitmap[k3], bitmap[k3 + 1]);
+				bitmap[k2] = AvgBox(bitmap[k0 - 2], bitmap[k0 - 1], bitmap[k0], bitmap[k0 + 1],bitmap[k0 + 2],
+									bitmap[k1 - 2], bitmap[k1 - 1], bitmap[k1], bitmap[k0 + 1],bitmap[k1 + 2],
+									bitmap[k2 - 2], bitmap[k2 - 1], bitmap[k2], bitmap[k2 + 1],bitmap[k2 + 2],
+									bitmap[k3 - 2], bitmap[k3 - 1], bitmap[k3], bitmap[k3 + 1],bitmap[k3 + 2],
+									bitmap[k4 - 2], bitmap[k4 - 1], bitmap[k4], bitmap[k4 + 1],bitmap[k4 + 2],
+									);
 				
 			}
 			else {
