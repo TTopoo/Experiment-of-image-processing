@@ -5,7 +5,7 @@
 #include "hdr.h"
 typedef unsigned char uchar;
 struct bmphdr* hdr;
-unsigned char* bitmap;
+unsigned char* bitmap,*to;
 int count[256],acum[256];
 char buf[2048];
 
@@ -56,7 +56,8 @@ int main(int argc, char* argv[])//argc是参数个数;argv是具体的每一个�
     fseek(fp, hdr->offset, SEEK_SET);//跳过offset前的字段，为了之后读图像方便点
     nr_pixels = hdr->width * hdr->height;//计算像素大小
     bitmap = malloc(nr_pixels);//分配像素大小的空间
-    fread(bitmap, nr_pixels, 1, fp);//每次读取一个像素大小的对象到bitmap中,读像素次
+    to = malloc(nr_pixels);
+	fread(bitmap, nr_pixels, 1, fp);//每次读取一个像素大小的对象到bitmap中,读像素次
     fclose(fp);
 	
 	printf("%d %d\n",hdr->width,hdr->height);
@@ -70,14 +71,14 @@ int main(int argc, char* argv[])//argc是参数个数;argv是具体的每一个�
 			if(	(i - 1) >= 0 && (i + 1) <= hdr->width && 
 				(j - 1) >= 0 && (j + 1) <= hdr->height ){
 				
-				bitmap[k2] = Median(bitmap[k1 - 1], bitmap[k1], bitmap[k1 + 1],
+				to[k2] = Median(bitmap[k1 - 1], bitmap[k1], bitmap[k1 + 1],
 									bitmap[k2 - 1], bitmap[k2], bitmap[k2 + 1],	
 									bitmap[k3 - 1], bitmap[k3], bitmap[k3 + 1]);
 				
 			}
 			else {
 				k2 = i * hdr->width + j;
-				bitmap[k2] = bitmap[k2];
+				to[k2] = bitmap[k2];
 			}
 		}
 	}
@@ -106,10 +107,11 @@ int main(int argc, char* argv[])//argc是参数个数;argv是具体的每一个�
 
     if (hdr->offset > 54)//文件起始位置到图像像素数据的字节偏移量如果大于54
         fwrite(hdr->info, hdr->offset - 54, 1, fpnew);//把info里面的offset-54 大小字节的元素输出到新图中
-    fwrite(bitmap, nr_pixels, 1, fpnew);//写图像
+    fwrite(to, nr_pixels, 1, fpnew);//写图像
     //say goodbye
     fclose(fpnew);
     free(hdr);
     free(bitmap);
+	free(to);
     return 0;
 }

@@ -5,11 +5,14 @@
 #include "hdr.h"
 typedef unsigned char uchar;
 struct bmphdr* hdr;
-unsigned char* bitmap;
+unsigned char* bitmap,* to;
 int count[256],acum[256];
 char buf[2048];
 
-
+uchar AvgBox(uchar n1, uchar n2, uchar n3, uchar n4, uchar n5,
+	uchar n6, uchar n7, uchar n8, uchar n9){
+		return (n1 + n2 + n3 + n4 + n5 + n6 + n7 + n8 + n9)/9.0;
+}
 uchar AvgBox(uchar n1, uchar n2, uchar n3, uchar n4, uchar n5,
 	uchar n6, uchar n7, uchar n8, uchar n9, uchar n10,
 	uchar n11, uchar n12, uchar n13, uchar n14, uchar n15,
@@ -60,18 +63,21 @@ int main(int argc, char* argv[])//argc是参数个数;argv是具体的每一个�
 			
 			if(	(i - 2) >= 0 && (i + 2) <= hdr->width && 
 				(j - 2) >= 0 && (j + 2) <= hdr->height ){
-				
-				bitmap[k2] = AvgBox(bitmap[k0 - 2], bitmap[k0 - 1], bitmap[k0], bitmap[k0 + 1],bitmap[k0 + 2],
+				/*
+				to[k2] = AvgBox(bitmap[k0 - 2], bitmap[k0 - 1], bitmap[k0], bitmap[k0 + 1],bitmap[k0 + 2],
 									bitmap[k1 - 2], bitmap[k1 - 1], bitmap[k1], bitmap[k0 + 1],bitmap[k1 + 2],
 									bitmap[k2 - 2], bitmap[k2 - 1], bitmap[k2], bitmap[k2 + 1],bitmap[k2 + 2],
 									bitmap[k3 - 2], bitmap[k3 - 1], bitmap[k3], bitmap[k3 + 1],bitmap[k3 + 2],
 									bitmap[k4 - 2], bitmap[k4 - 1], bitmap[k4], bitmap[k4 + 1],bitmap[k4 + 2],
-									);
-				
+									);*/
+				to[k2] = AvgBox(bitmap[k1 - 1], bitmap[k1], bitmap[k0 + 1],
+								bitmap[k2 - 1], bitmap[k2], bitmap[k2 + 1],
+								bitmap[k3 - 1], bitmap[k3], bitmap[k3 + 1],
+								);
 			}
 			else {
 				k2 = i * hdr->width + j;
-				bitmap[k2] = bitmap[k2];
+				to[k2] = bitmap[k2];
 			}
 		}
 	}
@@ -100,10 +106,11 @@ int main(int argc, char* argv[])//argc是参数个数;argv是具体的每一个�
 
     if (hdr->offset > 54)//文件起始位置到图像像素数据的字节偏移量如果大于54
         fwrite(hdr->info, hdr->offset - 54, 1, fpnew);//把info里面的offset-54 大小字节的元素输出到新图中
-    fwrite(bitmap, nr_pixels, 1, fpnew);//写图像
+    fwrite(to, nr_pixels, 1, fpnew);//写图像
     //say goodbye
     fclose(fpnew);
     free(hdr);
     free(bitmap);
+	free(to);
     return 0;
 }
